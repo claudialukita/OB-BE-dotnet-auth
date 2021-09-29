@@ -19,7 +19,7 @@ COPY BLL/ ./BLL/
 COPY DAL/ ./DAL/
 
 #
-WORKDIR /app/API
+WORKDIR /app/OB-BE-dotnet-auth
 RUN dotnet publish -c Release -o out 
 #
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS runtime
