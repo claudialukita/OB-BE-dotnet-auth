@@ -37,7 +37,6 @@ namespace OB_BE_dotnet_auth
         public void ConfigureServices(IServiceCollection services)
         {
             X509Certificate2 cert = new X509Certificate2("example.pfx", Configuration.GetValue<string>("Certificate:Password"));
-            string migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             //services.AddControllers();
 
@@ -54,14 +53,14 @@ namespace OB_BE_dotnet_auth
                options.ConfigureDbContext = builder =>
                    builder.UseSqlServer(
                        Configuration.GetConnectionString("DefaultConnection"),
-                       sql => sql.MigrationsAssembly(migrationsAssembly));
+                       sql => sql.MigrationsAssembly("DAL"));
            })
            .AddOperationalStore(options =>
            {
                options.ConfigureDbContext = builder =>
                    builder.UseSqlServer(
                        Configuration.GetConnectionString("DefaultConnection"),
-                       sql => sql.MigrationsAssembly(migrationsAssembly));
+                       sql => sql.MigrationsAssembly("DAL"));
                options.EnableTokenCleanup = true;
                options.TokenCleanupInterval = 3600;
            })
