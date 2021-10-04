@@ -26,4 +26,5 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS runtime
 WORKDIR /app 
 #
 COPY --from=build /app/OB-BE-dotnet-auth/out ./
+COPY --from=build /app/OB-BE-dotnet-auth/example.pfx ./
 ENTRYPOINT ["dotnet", "API.dll"]
