@@ -1,0 +1,59 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+      app: ob-be-dotnet-auth
+  name: ob-be-dotnet-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: ob-be-dotnet-auth
+  strategy:
+    rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+          app: ob-be-dotnet-auth
+      name: ob-be-dotnet-auth
+    spec:
+      containers:
+        - name: ob-be-dotnet-auth
+          image: acronboarding.azurecr.io/claudia-auth:latest
+          imagePullPolicy: Always
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: secret-claudia
+                  key: extra
+          ports:
+          - containerPort: 80
+          resources:
+            requests:
+                cpu: 100m
+                memory: 128Mi
+            limits:
+                cpu: 125m
+                memory: 256Mi
+      restartPolicy: Always
+      serviceAccountName: ""
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ob-be-dotnet-auth
+  name: ob-be-dotnet-auth
+spec:
+  ports:
+  - port: 80
+  type: LoadBalancer
+  selector:
+    app: ob-be-dotnet-auth
+status:
+  loadBalancer: {}

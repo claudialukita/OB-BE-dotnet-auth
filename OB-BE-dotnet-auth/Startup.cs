@@ -37,6 +37,7 @@ namespace OB_BE_dotnet_auth
         public void ConfigureServices(IServiceCollection services)
         {
             X509Certificate2 cert = new X509Certificate2("example.pfx", Configuration.GetValue<string>("Certificate:Password"));
+            string migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             //services.AddControllers();
 
@@ -53,14 +54,14 @@ namespace OB_BE_dotnet_auth
                options.ConfigureDbContext = builder =>
                    builder.UseSqlServer(
                        Configuration.GetConnectionString("DefaultConnection"),
-                       sql => sql.MigrationsAssembly("DAL"));
+                       sql => sql.MigrationsAssembly(migrationsAssembly));
            })
            .AddOperationalStore(options =>
            {
                options.ConfigureDbContext = builder =>
                    builder.UseSqlServer(
                        Configuration.GetConnectionString("DefaultConnection"),
-                       sql => sql.MigrationsAssembly("DAL"));
+                       sql => sql.MigrationsAssembly(migrationsAssembly));
                options.EnableTokenCleanup = true;
                options.TokenCleanupInterval = 3600;
            })
@@ -141,6 +142,7 @@ namespace OB_BE_dotnet_auth
                 });
             });
 
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -162,7 +164,7 @@ namespace OB_BE_dotnet_auth
             app.UseAuthorization();
 
             app.UseIdentityServer();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -174,6 +176,9 @@ namespace OB_BE_dotnet_auth
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample v1");
             });
+
+            InitConfig.InitializeDatabase(app);
+
         }
     }
 }

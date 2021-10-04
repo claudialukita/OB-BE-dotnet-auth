@@ -57,8 +57,8 @@ namespace BLL
 
                 DiscoveryDocumentResponse discoveryDocument = await _httpClient.GetDiscoveryDocumentAsync(discoReq);
 
-                //Client client = await _clientStore.FindEnabledClientByIdAsync(_config.GetValue<string>("Service:ClientId"));
-                Client client = await _clientStore.FindEnabledClientByIdAsync("AuthService");
+                Client client = await _clientStore.FindEnabledClientByIdAsync(_config.GetValue<string>("Service:ClientId"));
+                //Client client = await _clientStore.FindEnabledClientByIdAsync("AuthService");
 
                 PasswordTokenRequest passwordTokenRequest = new PasswordTokenRequest()
                 {
